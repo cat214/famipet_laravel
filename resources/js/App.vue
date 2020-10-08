@@ -7,3 +7,6 @@
     </main>
   </div>
 </template>
+
+<script>
+</script>
