@@ -7337,6 +7337,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -57031,7 +57034,17 @@ var render = function() {
   return _c("div", [
     _c("h1", [_vm._v("photo list")]),
     _vm._v(" "),
-    _c("a", { attrs: { href: _vm.lineLoginUrl } }, [_vm._v("ログイン")])
+    _c("h1", [_vm._v("ユーザー情報")]),
+    _vm._v(" "),
+    !_vm.user.name
+      ? _c("a", { attrs: { href: _vm.lineLoginUrl } }, [_vm._v("ログイン")])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.user.name ? _c("p", [_vm._v(_vm._s(_vm.user.name))]) : _vm._e(),
+    _vm._v(" "),
+    _vm.user.icon
+      ? _c("img", { attrs: { src: _vm.user.icon, alt: "" } })
+      : _vm._e()
   ])
 }
 var staticRenderFns = []

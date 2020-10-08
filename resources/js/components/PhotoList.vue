@@ -1,7 +1,10 @@
 <template>
     <div>
         <h1>photo list</h1>
-        <a :href="lineLoginUrl">ログイン</a>
+        <h1>ユーザー情報</h1>
+        <a v-if="!user.name" :href="lineLoginUrl">ログイン</a>
+        <p v-if="user.name">{{ user.name }}</p>
+        <img v-if="user.icon" :src="user.icon" alt="">
     </div>
 </template>
 
