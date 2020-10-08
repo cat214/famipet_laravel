@@ -3,8 +3,9 @@
         <h1>photo list</h1>
         <h1>ユーザー情報</h1>
         <a v-if="!user.name" :href="lineLoginUrl">ログイン</a>
+        <button v-else @click="logout">ログアウト</button>
         <p v-if="user.name">{{ user.name }}</p>
-        <img v-if="user.icon" :src="user.icon" alt="">
+        <img v-if="user.icon" :src="user.icon">
     </div>
 </template>
 
@@ -26,6 +27,7 @@ export default {
         icon: "",
       },
       imageUrl: "",
+      accessToken: "",
     };
   },
 
@@ -65,11 +67,23 @@ export default {
         .get('api/login?code=' + vue.code)
         // .then(response => (console.log(response)))
         .then(response => {
-          vue.$set(vue.user, 'id', response.data.userId);
-          vue.$set(vue.user, 'name', response.data.displayName);
-          vue.$set(vue.user, 'icon', response.data.pictureUrl);
+          vue.$set(vue.user, 'id', response.data[0].userId);
+          vue.$set(vue.user, 'name', response.data[0].displayName);
+          vue.$set(vue.user, 'icon', response.data[0].pictureUrl);
+          vue.accessToken = response.data[1];
           console.log(vue.user)
         })
+    },
+
+    logout() {
+      var vue = this;
+      var accessToken = vue.accessToken;
+      vue.accessToken = "";
+      vue.user.id = "";
+      vue.user.name = "";
+      vue.user.icon = "";
+      axios
+      .get('api/logout?at=' + accessToken);
     }
   },
 

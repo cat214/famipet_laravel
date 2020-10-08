@@ -7340,6 +7340,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -7357,7 +7358,8 @@ var _require = __webpack_require__(/*! crypto */ "./node_modules/crypto-browseri
         name: "",
         icon: ""
       },
-      imageUrl: ""
+      imageUrl: "",
+      accessToken: ""
     };
   },
   computed: {
@@ -7392,11 +7394,21 @@ var _require = __webpack_require__(/*! crypto */ "./node_modules/crypto-browseri
       var code = vue.code;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('api/login?code=' + vue.code) // .then(response => (console.log(response)))
       .then(function (response) {
-        vue.$set(vue.user, 'id', response.data.userId);
-        vue.$set(vue.user, 'name', response.data.displayName);
-        vue.$set(vue.user, 'icon', response.data.pictureUrl);
+        vue.$set(vue.user, 'id', response.data[0].userId);
+        vue.$set(vue.user, 'name', response.data[0].displayName);
+        vue.$set(vue.user, 'icon', response.data[0].pictureUrl);
+        vue.accessToken = response.data[1];
         console.log(vue.user);
       });
+    },
+    logout: function logout() {
+      var vue = this;
+      var accessToken = vue.accessToken;
+      vue.accessToken = "";
+      vue.user.id = "";
+      vue.user.name = "";
+      vue.user.icon = "";
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('api/logout?at=' + accessToken);
     }
   },
   created: function created() {
@@ -57038,13 +57050,11 @@ var render = function() {
     _vm._v(" "),
     !_vm.user.name
       ? _c("a", { attrs: { href: _vm.lineLoginUrl } }, [_vm._v("ログイン")])
-      : _vm._e(),
+      : _c("button", { on: { click: _vm.logout } }, [_vm._v("ログアウト")]),
     _vm._v(" "),
     _vm.user.name ? _c("p", [_vm._v(_vm._s(_vm.user.name))]) : _vm._e(),
     _vm._v(" "),
-    _vm.user.icon
-      ? _c("img", { attrs: { src: _vm.user.icon, alt: "" } })
-      : _vm._e()
+    _vm.user.icon ? _c("img", { attrs: { src: _vm.user.icon } }) : _vm._e()
   ])
 }
 var staticRenderFns = []

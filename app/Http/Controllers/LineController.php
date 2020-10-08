@@ -49,6 +49,29 @@ class LineController extends Controller
         ]);
         $get = $response->getBody();
         $get = json_decode($get,true);
-        return $get;
+        return array($get, $access_token);
+    }
+
+    /*
+    * @param ログインしたいユーザーのアクセストークン
+    */
+    protected function logout(Request $request){
+        $uri ="https://api.line.me/oauth2/v2.1/revoke";
+        $access_token = $request->input("at");
+        $client_id      = env("CLIENT_ID");
+        $client_secret  = env("CLIENT_SECRET");
+
+        // アクセストークンリクエストを送信
+        $client = new Client();
+        $response = $client->request("POST",$uri,[
+            "headers" => [
+                "Content-Type"   => "application/x-www-form-urlencoded",
+            ],
+            "form_params" => [
+                "access_token"   => $access_token,
+                "client_id"      => $client_id,
+                "client_secret"  => $client_secret,
+            ]
+        ]);
     }
 }
