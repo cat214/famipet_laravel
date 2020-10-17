@@ -1,11 +1,20 @@
 <template>
     <div>
+      <div class="userInfo">
         <h1>photo list</h1>
         <h1>ユーザー情報</h1>
         <a v-if="!user.name" :href="lineLoginUrl">ログイン</a>
         <button v-else @click="logout">ログアウト</button>
         <p v-if="user.name">{{ user.name }}</p>
         <img v-if="user.icon" :src="user.icon">
+      </div>
+      <div class="imageUpload">
+        <form>
+          <input type="text" v-model="filename">
+          <input type="file" name="photo" @change="onFileChange">
+          <input type="submit" value="アップロード" @click.prevent="photoUpload">
+        </form>
+      </div>
     </div>
 </template>
 
@@ -26,7 +35,7 @@ export default {
         name: "",
         icon: "",
       },
-      imageUrl: "",
+      imageFile: "",
       accessToken: "",
     };
   },
@@ -84,6 +93,18 @@ export default {
       vue.user.icon = "";
       axios
       .get('api/logout?at=' + accessToken);
+    },
+    onFileChange(e) {
+      this.imageFile = e.target.files[0] || e.dataTransfer.files;
+    },
+    photoUpload(){
+      const formData = new FormData()
+      formData.append('filename',this.filename)
+      formData.append('photo',this.imageFile)
+
+      axios.post('/api/photo/upload',formData).then(response =>{
+          console.log(response);
+      });
     }
   },
 

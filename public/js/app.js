@@ -7341,6 +7341,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -7358,7 +7367,7 @@ var _require = __webpack_require__(/*! crypto */ "./node_modules/crypto-browseri
         name: "",
         icon: ""
       },
-      imageUrl: "",
+      imageFile: "",
       accessToken: ""
     };
   },
@@ -7409,6 +7418,17 @@ var _require = __webpack_require__(/*! crypto */ "./node_modules/crypto-browseri
       vue.user.name = "";
       vue.user.icon = "";
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('api/logout?at=' + accessToken);
+    },
+    onFileChange: function onFileChange(e) {
+      this.imageFile = e.target.files[0] || e.dataTransfer.files;
+    },
+    photoUpload: function photoUpload() {
+      var formData = new FormData();
+      formData.append('filename', this.filename);
+      formData.append('photo', this.imageFile);
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/photo/upload', formData).then(function (response) {
+        console.log(response);
+      });
     }
   },
   created: function created() {
@@ -57044,17 +57064,59 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h1", [_vm._v("photo list")]),
+    _c("div", { staticClass: "userInfo" }, [
+      _c("h1", [_vm._v("photo list")]),
+      _vm._v(" "),
+      _c("h1", [_vm._v("ユーザー情報")]),
+      _vm._v(" "),
+      !_vm.user.name
+        ? _c("a", { attrs: { href: _vm.lineLoginUrl } }, [_vm._v("ログイン")])
+        : _c("button", { on: { click: _vm.logout } }, [_vm._v("ログアウト")]),
+      _vm._v(" "),
+      _vm.user.name ? _c("p", [_vm._v(_vm._s(_vm.user.name))]) : _vm._e(),
+      _vm._v(" "),
+      _vm.user.icon ? _c("img", { attrs: { src: _vm.user.icon } }) : _vm._e()
+    ]),
     _vm._v(" "),
-    _c("h1", [_vm._v("ユーザー情報")]),
-    _vm._v(" "),
-    !_vm.user.name
-      ? _c("a", { attrs: { href: _vm.lineLoginUrl } }, [_vm._v("ログイン")])
-      : _c("button", { on: { click: _vm.logout } }, [_vm._v("ログアウト")]),
-    _vm._v(" "),
-    _vm.user.name ? _c("p", [_vm._v(_vm._s(_vm.user.name))]) : _vm._e(),
-    _vm._v(" "),
-    _vm.user.icon ? _c("img", { attrs: { src: _vm.user.icon } }) : _vm._e()
+    _c("div", { staticClass: "imageUpload" }, [
+      _c("form", [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.filename,
+              expression: "filename"
+            }
+          ],
+          attrs: { type: "text" },
+          domProps: { value: _vm.filename },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.filename = $event.target.value
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("input", {
+          attrs: { type: "file", name: "photo" },
+          on: { change: _vm.onFileChange }
+        }),
+        _vm._v(" "),
+        _c("input", {
+          attrs: { type: "submit", value: "アップロード" },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.photoUpload($event)
+            }
+          }
+        })
+      ])
+    ])
   ])
 }
 var staticRenderFns = []
