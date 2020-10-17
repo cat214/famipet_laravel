@@ -7350,6 +7350,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -57078,45 +57081,49 @@ var render = function() {
       _vm.user.icon ? _c("img", { attrs: { src: _vm.user.icon } }) : _vm._e()
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "imageUpload" }, [
-      _c("form", [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.filename,
-              expression: "filename"
-            }
-          ],
-          attrs: { type: "text" },
-          domProps: { value: _vm.filename },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
+    _vm.user.name
+      ? _c("div", { staticClass: "imageUpload" }, [
+          _c("form", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.filename,
+                  expression: "filename"
+                }
+              ],
+              attrs: { type: "text" },
+              domProps: { value: _vm.filename },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.filename = $event.target.value
+                }
               }
-              _vm.filename = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("input", {
-          attrs: { type: "file", name: "photo" },
-          on: { change: _vm.onFileChange }
-        }),
-        _vm._v(" "),
-        _c("input", {
-          attrs: { type: "submit", value: "アップロード" },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.photoUpload($event)
-            }
-          }
-        })
-      ])
-    ])
+            }),
+            _vm._v(" "),
+            _c("input", {
+              attrs: { type: "file", name: "photo" },
+              on: { change: _vm.onFileChange }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              attrs: { type: "submit", value: "アップロード" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.photoUpload($event)
+                }
+              }
+            })
+          ])
+        ])
+      : _c("div", [
+          _vm._v("\n    ログインすると画像をアップロードできます\n  ")
+        ])
   ])
 }
 var staticRenderFns = []

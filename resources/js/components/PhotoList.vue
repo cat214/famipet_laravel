@@ -8,12 +8,15 @@
         <p v-if="user.name">{{ user.name }}</p>
         <img v-if="user.icon" :src="user.icon">
       </div>
-      <div class="imageUpload">
+      <div v-if="user.name" class="imageUpload">
         <form>
           <input type="text" v-model="filename">
           <input type="file" name="photo" @change="onFileChange">
           <input type="submit" value="アップロード" @click.prevent="photoUpload">
         </form>
+      </div>
+      <div v-else>
+        ログインすると画像をアップロードできます
       </div>
     </div>
 </template>
