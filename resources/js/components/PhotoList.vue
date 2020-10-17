@@ -6,7 +6,7 @@
         <a v-if="!user.name" :href="lineLoginUrl">ログイン</a>
         <button v-else @click="logout">ログアウト</button>
         <p v-if="user.name">{{ user.name }}</p>
-        <img v-if="user.icon" :src="user.icon">
+        <img v-if="user.icon" :src="user.icon" class="icon">
       </div>
       <div v-if="user.name" class="imageUpload">
         <form>
@@ -122,3 +122,13 @@ export default {
   },
 }
 </script>
+<style>
+.icon{
+  width: 200px;
+  height: 200px;
+  line-height: 200px;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+}
+</style>
