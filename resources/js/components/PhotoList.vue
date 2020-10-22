@@ -1,11 +1,30 @@
 <template>
     <div>
+      <div class="userInfo">
         <h1>photo list</h1>
         <h1>ユーザー情報</h1>
         <a v-if="!user.name" :href="lineLoginUrl">ログイン</a>
         <button v-else @click="logout">ログアウト</button>
         <p v-if="user.name">{{ user.name }}</p>
-        <img v-if="user.icon" :src="user.icon">
+        <img v-if="user.icon" :src="user.icon" class="icon">
+      </div>
+      <div v-if="user.name" class="imageUpload">
+        <form>
+          <input type="text" v-model="filename">
+          <input type="file" name="photo" @change="onFileChange">
+          <input type="submit" value="アップロード" @click.prevent="photoUpload">
+        </form>
+      </div>
+      <div v-else>
+        ログインすると画像をアップロードできます
+      </div>
+      <div>
+        <h1>写真一覧</h1>
+        <ul>
+          <li v-for="(photo, index) in photos" :key="index">
+          </li>
+        </ul>
+      </div>
     </div>
 </template>
 
@@ -26,7 +45,7 @@ export default {
         name: "",
         icon: "",
       },
-      imageUrl: "",
+      imageFile: "",
       accessToken: "",
     };
   },
@@ -65,14 +84,19 @@ export default {
       var code = vue.code;
       axios
         .get('api/login?code=' + vue.code)
-        // .then(response => (console.log(response)))
         .then(response => {
           vue.$set(vue.user, 'id', response.data[0].userId);
           vue.$set(vue.user, 'name', response.data[0].displayName);
           vue.$set(vue.user, 'icon', response.data[0].pictureUrl);
           vue.accessToken = response.data[1];
-          console.log(vue.user)
+          vue.photos.urls.push(...response.data[2].map(obj => obj.url));
+          vue.photos.filenames.push(...response.data[2].map(obj => obj.filename));
         })
+    },
+
+    fetchPhotos(){
+      var vue = this;
+      
     },
 
     logout() {
@@ -84,6 +108,19 @@ export default {
       vue.user.icon = "";
       axios
       .get('api/logout?at=' + accessToken);
+    },
+    onFileChange(e) {
+      this.imageFile = e.target.files[0] || e.dataTransfer.files;
+    },
+    photoUpload(){
+      const formData = new FormData()
+      formData.append('userId',this.user.id)
+      formData.append('filename',this.filename)
+      formData.append('photo',this.imageFile)
+
+      axios.post('/api/photo/upload',formData).then(response =>{
+          console.log(response);
+      });
     }
   },
 
@@ -92,9 +129,20 @@ export default {
   },
 
   mounted() {
-    //  LINEログインフォームからのリダイレクト語を想定
+    //  LINEログインフォームからのリダイレクト後を想定
     this.fetchParams()
     this.fetchUserInfo()
+    this.fetchPhotos()
   },
 }
 </script>
+<style>
+.icon{
+  width: 200px;
+  height: 200px;
+  line-height: 200px;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+}
+</style>

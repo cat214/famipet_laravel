@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/login', 'LineController@login')->name('login');
 Route::get('/logout', 'LineController@logout')->name('logout');
+Route::post('/photo/upload', 'PhotoController@upload')->name('upload');
