@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
+use App\Photo;
+use App\User;
 
 class LineController extends Controller
 {
-    protected function hello(){
-        var_dump("hello");
-    }
-
     protected function login(Request $request){
         // アクセストークンリクエストを作成
         $uri ="https://api.line.me/oauth2/v2.1/token";
@@ -47,9 +45,20 @@ class LineController extends Controller
                 "Authorization" => "Bearer " . $access_token,
             ],
         ]);
-        $get = $response->getBody();
-        $get = json_decode($get,true);
-        return array($get, $access_token);
+        $get = $response->getBody()->getContents();
+        $user_info = json_decode($get,true);
+
+        // ユーザーが未登録なら登録する
+        $user_id   = $user_info['userId'];
+        $user_name = $user_info['displayName'];
+        $user_icon = $user_info['pictureUrl'];
+        $this->registerUser($user_id,$user_name,$user_icon);
+
+        $user = new User();
+        $photos = $user->getPhotos($user_id);
+
+        // アクセストークンはログアウト時にアクセストークンを無効化するために渡す
+        return [$user_info, $access_token, $photos];
     }
 
     /*
@@ -73,5 +82,18 @@ class LineController extends Controller
                 "client_secret"  => $client_secret,
             ]
         ]);
+    }
+
+    protected function registerUser($user_id, $user_name, $user_icon){
+        $user = new User;
+        $isUserRegistered = $user->where('id', $user_id)->first();
+        if($isUserRegistered == true){
+            return;
+        }else{
+            $user->id = $user_id;
+            $user->name = $user_name;
+            $user->icon = $user_icon;
+            $user->save();
+        }
     }
 }

@@ -7330,6 +7330,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var js_sha256__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! js-sha256 */ "./node_modules/js-sha256/src/sha256.js");
 /* harmony import */ var js_sha256__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(js_sha256__WEBPACK_IMPORTED_MODULE_1__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -7404,14 +7423,25 @@ var _require = __webpack_require__(/*! crypto */ "./node_modules/crypto-browseri
       // 非同期処理内のthisはvueオブジェクトを参照しない
       var vue = this;
       var code = vue.code;
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('api/login?code=' + vue.code) // .then(response => (console.log(response)))
-      .then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('api/login?code=' + vue.code).then(function (response) {
+        var _vue$photos$urls, _vue$photos$filenames;
+
         vue.$set(vue.user, 'id', response.data[0].userId);
         vue.$set(vue.user, 'name', response.data[0].displayName);
         vue.$set(vue.user, 'icon', response.data[0].pictureUrl);
         vue.accessToken = response.data[1];
-        console.log(vue.user);
+
+        (_vue$photos$urls = vue.photos.urls).push.apply(_vue$photos$urls, _toConsumableArray(response.data[2].map(function (obj) {
+          return obj.url;
+        })));
+
+        (_vue$photos$filenames = vue.photos.filenames).push.apply(_vue$photos$filenames, _toConsumableArray(response.data[2].map(function (obj) {
+          return obj.filename;
+        })));
       });
+    },
+    fetchPhotos: function fetchPhotos() {
+      var vue = this;
     },
     logout: function logout() {
       var vue = this;
@@ -7427,6 +7457,7 @@ var _require = __webpack_require__(/*! crypto */ "./node_modules/crypto-browseri
     },
     photoUpload: function photoUpload() {
       var formData = new FormData();
+      formData.append('userId', this.user.id);
       formData.append('filename', this.filename);
       formData.append('photo', this.imageFile);
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/photo/upload', formData).then(function (response) {
@@ -7438,9 +7469,10 @@ var _require = __webpack_require__(/*! crypto */ "./node_modules/crypto-browseri
     this.setState();
   },
   mounted: function mounted() {
-    //  LINEログインフォームからのリダイレクト語を想定
+    //  LINEログインフォームからのリダイレクト後を想定
     this.fetchParams();
     this.fetchUserInfo();
+    this.fetchPhotos();
   }
 });
 
@@ -57770,7 +57802,19 @@ var render = function() {
         ])
       : _c("div", [
           _vm._v("\n    ログインすると画像をアップロードできます\n  ")
-        ])
+        ]),
+    _vm._v(" "),
+    _c("div", [
+      _c("h1", [_vm._v("写真一覧")]),
+      _vm._v(" "),
+      _c(
+        "ul",
+        _vm._l(_vm.photos, function(photo, index) {
+          return _c("li", { key: index })
+        }),
+        0
+      )
+    ])
   ])
 }
 var staticRenderFns = []

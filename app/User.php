@@ -11,16 +11,30 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * テーブルの主キー
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'url', 'icon',
+        'id', 'name', 'icon',
     ];
 
-    public function getPhotos(){
-        // photos_idに対応するデータを取得
+    /**
+     * ユーザーに関連する写真をとってくる
+     */
+    public function photos(){
         return $this->hasMany('App\Photo');
+    }
+
+    public function getPhotos($user_id)
+    {
+        return $this->find($user_id)->photos()->get(['url', 'filename']);
     }
 }

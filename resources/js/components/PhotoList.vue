@@ -18,6 +18,13 @@
       <div v-else>
         ログインすると画像をアップロードできます
       </div>
+      <div>
+        <h1>写真一覧</h1>
+        <ul>
+          <li v-for="(photo, index) in photos" :key="index">
+          </li>
+        </ul>
+      </div>
     </div>
 </template>
 
@@ -77,14 +84,19 @@ export default {
       var code = vue.code;
       axios
         .get('api/login?code=' + vue.code)
-        // .then(response => (console.log(response)))
         .then(response => {
           vue.$set(vue.user, 'id', response.data[0].userId);
           vue.$set(vue.user, 'name', response.data[0].displayName);
           vue.$set(vue.user, 'icon', response.data[0].pictureUrl);
           vue.accessToken = response.data[1];
-          console.log(vue.user)
+          vue.photos.urls.push(...response.data[2].map(obj => obj.url));
+          vue.photos.filenames.push(...response.data[2].map(obj => obj.filename));
         })
+    },
+
+    fetchPhotos(){
+      var vue = this;
+      
     },
 
     logout() {
@@ -102,6 +114,7 @@ export default {
     },
     photoUpload(){
       const formData = new FormData()
+      formData.append('userId',this.user.id)
       formData.append('filename',this.filename)
       formData.append('photo',this.imageFile)
 
@@ -116,9 +129,10 @@ export default {
   },
 
   mounted() {
-    //  LINEログインフォームからのリダイレクト語を想定
+    //  LINEログインフォームからのリダイレクト後を想定
     this.fetchParams()
     this.fetchUserInfo()
+    this.fetchPhotos()
   },
 }
 </script>
