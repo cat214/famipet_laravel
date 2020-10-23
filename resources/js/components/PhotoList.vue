@@ -20,10 +20,9 @@
       </div>
       <div>
         <h1>写真一覧</h1>
-        <ul>
-          <li v-for="(photo, index) in photos" :key="index">
-          </li>
-        </ul>
+          <div v-for="url in photos.urls" :key="url" class="photo">
+              <img :src="url">
+          </div>
       </div>
     </div>
 </template>
@@ -36,7 +35,10 @@ const {randomBytes} = require('crypto')
 export default {
   data: function () {
     return {
-      photos: [],
+      photos: {
+        urls: [],
+        filenames: [],
+      },
       sessionId: "",
       state: "",
 
@@ -144,5 +146,9 @@ export default {
   border-radius: 50%;
   color: #fff;
   text-align: center;
+}
+.photo{
+  width: 400px;
+  height: 400px;
 }
 </style>

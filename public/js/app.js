@@ -7371,7 +7371,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
-//
 
 
 
@@ -7381,7 +7380,10 @@ var _require = __webpack_require__(/*! crypto */ "./node_modules/crypto-browseri
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      photos: [],
+      photos: {
+        urls: [],
+        filenames: []
+      },
       sessionId: "",
       state: "",
       user: {
@@ -25712,7 +25714,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.icon{\n  width: 200px;\n  height: 200px;\n  line-height: 200px;\n  border-radius: 50%;\n  color: #fff;\n  text-align: center;\n}\n", ""]);
+exports.push([module.i, "\n.icon{\n  width: 200px;\n  height: 200px;\n  line-height: 200px;\n  border-radius: 50%;\n  color: #fff;\n  text-align: center;\n}\n.photo{\n  width: 400px;\n  height: 400px;\n}\n", ""]);
 
 // exports
 
@@ -57804,17 +57806,19 @@ var render = function() {
           _vm._v("\n    ログインすると画像をアップロードできます\n  ")
         ]),
     _vm._v(" "),
-    _c("div", [
-      _c("h1", [_vm._v("写真一覧")]),
-      _vm._v(" "),
-      _c(
-        "ul",
-        _vm._l(_vm.photos, function(photo, index) {
-          return _c("li", { key: index })
-        }),
-        0
-      )
-    ])
+    _c(
+      "div",
+      [
+        _c("h1", [_vm._v("写真一覧")]),
+        _vm._v(" "),
+        _vm._l(_vm.photos.urls, function(url) {
+          return _c("div", { key: url, staticClass: "photo" }, [
+            _c("img", { attrs: { src: url } })
+          ])
+        })
+      ],
+      2
+    )
   ])
 }
 var staticRenderFns = []
