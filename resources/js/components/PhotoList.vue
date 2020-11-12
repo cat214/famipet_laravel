@@ -13,6 +13,7 @@
           <input type="text" v-model="filename">
           <input type="file" name="photo" @change="onFileChange">
           <input type="submit" value="アップロード" @click.prevent="photoUpload">
+          <img :src="imagePreview">
         </form>
       </div>
       <div v-else>
@@ -48,6 +49,7 @@ export default {
         icon: "",
       },
       imageFile: "",
+      imagePreview: "",
       accessToken: "",
     };
   },
@@ -113,17 +115,24 @@ export default {
     },
     onFileChange(e) {
       this.imageFile = e.target.files[0] || e.dataTransfer.files;
+      // プレビュー機能
+      if (this.imageFile.type.startsWith("image/")) {
+        this.imagePreview = window.URL.createObjectURL(this.imageFile);
+      }
     },
     photoUpload(){
+      this.validateForm()
       const formData = new FormData()
       formData.append('userId',this.user.id)
       formData.append('filename',this.filename)
       formData.append('photo',this.imageFile)
 
-      axios.post('/api/photo/upload',formData).then(response =>{
-          console.log(response);
+      axios.post('/api/photo/upload',formData)
+        .then(response => {
+          response[0]
+          response[1]
       });
-    }
+    },
   },
 
   created() {

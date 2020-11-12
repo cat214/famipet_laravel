@@ -7371,6 +7371,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
 
 
 
@@ -7392,6 +7393,7 @@ var _require = __webpack_require__(/*! crypto */ "./node_modules/crypto-browseri
         icon: ""
       },
       imageFile: "",
+      imagePreview: "",
       accessToken: ""
     };
   },
@@ -7455,15 +7457,21 @@ var _require = __webpack_require__(/*! crypto */ "./node_modules/crypto-browseri
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('api/logout?at=' + accessToken);
     },
     onFileChange: function onFileChange(e) {
-      this.imageFile = e.target.files[0] || e.dataTransfer.files;
+      this.imageFile = e.target.files[0] || e.dataTransfer.files; // プレビュー機能
+
+      if (this.imageFile.type.startsWith("image/")) {
+        this.imagePreview = window.URL.createObjectURL(this.imageFile);
+      }
     },
     photoUpload: function photoUpload() {
+      this.validateForm();
       var formData = new FormData();
       formData.append('userId', this.user.id);
       formData.append('filename', this.filename);
       formData.append('photo', this.imageFile);
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/photo/upload', formData).then(function (response) {
-        console.log(response);
+        response[0];
+        response[1];
       });
     }
   },
@@ -57799,7 +57807,9 @@ var render = function() {
                   return _vm.photoUpload($event)
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _c("img", { attrs: { src: _vm.imagePreview } })
           ])
         ])
       : _c("div", [
