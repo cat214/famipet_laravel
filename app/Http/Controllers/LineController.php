@@ -54,6 +54,8 @@ class LineController extends Controller
         $user_icon = $user_info['pictureUrl'];
         $this->registerUser($user_id,$user_name,$user_icon);
 
+        // ログインしたユーザーに対応した画像をとってくる
+        // TODO: 画像アップロード後はindexに遷移するためいらないかも
         $user = new User();
         $photos = $user->getPhotos($user_id);
 
