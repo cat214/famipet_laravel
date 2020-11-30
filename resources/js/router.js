@@ -1,19 +1,24 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import PhotoList from './components/PhotoList.vue'
-import Login from './components/Login.vue'
+import Index from './components/Index.vue'
+import Family from './components/Family.vue'
+import Upload from './components/Upload.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    component: PhotoList
+    component: Index
   },
   {
-    path: '/login',
-    component: Login
+    path: '/family',
+    component: Family
+  },
+  {
+    path: '/upload',
+    component: Upload
   }
 ]
 
